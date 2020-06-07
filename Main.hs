@@ -15,6 +15,7 @@ data XML = XMLElement {
     deriving Show
 
 
+-- Parse an XML node
 nodeParser :: GenParser Char st XML
 nodeParser = do
     (name, attributes) <- tagParser
@@ -27,6 +28,7 @@ nodeParser = do
     }
 
 
+-- Parse the body of an XML node
 bodyParser :: GenParser Char st [XML]
 bodyParser = do
     text <- option "" textParser
@@ -38,7 +40,7 @@ bodyParser = do
             return $ XMLText text : node : remaining
 
 
--- Parse the text between 2 XML tags
+-- Parse the text between two XML tags, either both opening or corresponinf opening and closing.
 textParser :: GenParser Char st String
 textParser = do
     first <- fmap return unescaped <|> escaped
